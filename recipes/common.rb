@@ -27,7 +27,7 @@ apt_repository "osops" do
   components ["main"]
   keyserver "keyserver.ubuntu.com"
   key "53E8EA35"
-  notifies :run, resources(:execute => "apt-get-update"), :immediately
+  notifies :run, resources(:execute => "apt-get update"), :immediately
 end
 
 
