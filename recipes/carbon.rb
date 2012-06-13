@@ -35,7 +35,8 @@ end
 # TODO: we should tune retention here, based on attributes.
 # for now, we'll just drop a simple schema for 1m
 # updates and retention of 1d.
-template "/etc/carbon/storage-schemas.conf" do
+
+template platform_options["carbon_config"] do
   source "storage-schemas.conf.erb"
   owner "root"
   group "root"
@@ -46,6 +47,6 @@ service "carbon-cache" do
   service_name platform_options["carbon_service"]
   supports :status => true, :restart => true
   action [:enable, :start]
-  subscribes :restart, resources(:template => "/etc/carbon/storage-schemas.conf"), :delayed
+  subscribes :restart, resources(:template => platform_options["carbon_config"]), :delayed
 end
 
