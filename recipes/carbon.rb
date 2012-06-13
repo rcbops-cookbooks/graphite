@@ -36,11 +36,19 @@ end
 # for now, we'll just drop a simple schema for 1m
 # updates and retention of 1d.
 
-template platform_options["carbon_config"] do
+template platform_options["carbon_schema_config"] do
   source "storage-schemas.conf.erb"
   owner "root"
   group "root"
   mode "0644"
+end
+
+template platform_options["carbon_config_dest"] do
+  source platform_options["carbon_config_source"]
+  owner "root"
+  group "root"
+  mode "0644"
+  only_if { platform?(%w{fedora}) }
 end
 
 service "carbon-cache" do
