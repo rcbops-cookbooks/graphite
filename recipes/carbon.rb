@@ -43,18 +43,19 @@ template platform_options["carbon_schema_config"] do
   mode "0644"
 end
 
-template platform_options["carbon_config_dest"] do
-  source platform_options["carbon_config_source"]
-  owner "root"
-  group "root"
-  mode "0644"
-  only_if { platform?(%w{fedora}) }
-end
+#if platform?("fedora")
+#  template platform_options["carbon_config_dest"] do
+#    source platform_options["carbon_config_source"]
+#    owner "root"
+#    group "root"
+#    mode "0644"
+#  end
+#end
 
 service "carbon-cache" do
   service_name platform_options["carbon_service"]
   supports :status => true, :restart => true
   action [:enable, :start]
-  subscribes :restart, resources(:template => platform_options["carbon_config"]), :delayed
+  subscribes :restart, resources(:template => platform_options["carbon_schema_config"]), :delayed
 end
 

@@ -15,6 +15,8 @@ when "ubuntu"
     "carbon_packages" =>["python-carbon"],
     "carbon_service" => "carbon-cache",
     "carbon_schema_config" => "/etc/carbon/storage-schemas.conf",
+    "carbon_config_source" => "",
+    "carbon_config_dest" => "",
     "whisper_packages" => ["python-whisper"],
     "graphite_packages" => ["graphite"],
     "package_overrides" => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'",
