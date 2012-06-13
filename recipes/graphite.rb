@@ -24,8 +24,13 @@ include_recipe "graphite::common"
 include_recipe "apache2"
 include_recipe "apache2::mod_status"
 
-package "graphite" do
-  action :upgrade
+platform_options = node["graphite"]["platform"]
+
+platform_options["graphite_packages"].each do |pkg|
+  package pkg do
+    action :upgrade
+    options platform_options["package_overrides"]
+  end
 end
 
 # this is kinda ugly

@@ -23,8 +23,13 @@
 include_recipe "graphite::common"
 include_recipe "graphite::whisper"
 
-package "python-carbon" do
-  action :upgrade
+platform_options = node["graphite"]["platform"]
+
+platform_options["carbon_packages"].each do |pkg|
+  package pkg do
+    action :upgrade
+    options platform_options["package_overrides"]
+  end
 end
 
 # TODO: we should tune retention here, based on attributes.
@@ -38,6 +43,7 @@ template "/etc/carbon/storage-schemas.conf" do
 end
 
 service "carbon-cache" do
+  service_name platform_options["carbon_service"]
   supports :status => true, :restart => true
   action [:enable, :start]
   subscribes :restart, resources(:template => "/etc/carbon/storage-schemas.conf"), :delayed
