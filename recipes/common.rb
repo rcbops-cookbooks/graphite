@@ -40,7 +40,7 @@ case node["platform"]
     end
 
     yum_repository "rcbops" do
-      name "RCB rpm repository"
+      name "rcb"
       url "http://build.monkeypuppetlabs.com/repo/Fedora/$releasever/$basearch"
       key "RPM-GPG-RCB"
       action :add
