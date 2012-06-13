@@ -43,14 +43,22 @@ template platform_options["carbon_schema_config"] do
   mode "0644"
 end
 
-#if platform?("fedora")
-#  template platform_options["carbon_config_dest"] do
-#    source platform_options["carbon_config_source"]
-#    owner "root"
-#    group "root"
-#    mode "0644"
-#  end
-#end
+# TODO(breu): clean this up
+if platform?("fedora")
+  template platform_options["carbon_config_dest"] do
+    source platform_options["carbon_config_source"]
+    owner "root"
+    group "root"
+    mode "0644"
+  end
+
+  directory "/var/lib/graphite/storage/log/webapp" do
+    owner "apache"
+    group "apache"
+    mode "0755"
+    action :create
+  end
+end
 
 service "carbon-cache" do
   service_name platform_options["carbon_service"]
