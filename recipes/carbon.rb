@@ -23,25 +23,42 @@
 include_recipe "graphite::common"
 include_recipe "graphite::whisper"
 
+platform_options = node["graphite"]["platform"]
+
+platform_options["carbon_packages"].each do |pkg|
+  package pkg do
+    action :upgrade
+    options platform_options["package_overrides"]
+  end
+end
+
 line_receiver_endpoint = get_bind_endpoint("carbon", "line-receiver")
 pickle_receiver_endpoint = get_bind_endpoint("carbon", "pickle-receiver")
 cache_query_endpoint = get_bind_endpoint("carbon", "cache-query")
 
-package "python-carbon" do
-  action :upgrade
-end
 
 # TODO: we should tune retention here, based on attributes.
 # for now, we'll just drop a simple schema for 1m
 # updates and retention of 1d.
-template "/etc/carbon/storage-schemas.conf" do
+
+template platform_options["carbon_schema_config"] do
   source "storage-schemas.conf.erb"
   owner "root"
   group "root"
   mode "0644"
 end
 
-template "/etc/carbon/carbon.conf" do
+# TODO(breu): clean this up
+directory "/var/lib/graphite/storage/log/webapp" do
+  owner "apache"
+  group "apache"
+  mode "0755"
+  action :create
+  recursive true
+  only_if do platform?("fedora") end 
+end
+
+template platform_options["carbon_config_dest"] do
   source "carbon.conf.erb"
   owner "root"
   group "root"
@@ -56,8 +73,9 @@ template "/etc/carbon/carbon.conf" do
 end
 
 service "carbon-cache" do
+  service_name platform_options["carbon_service"]
   supports :status => true, :restart => true
   action [:enable, :start]
-  subscribes :restart, resources(:template => "/etc/carbon/storage-schemas.conf"), :delayed
-  subscribes :restart, resources(:template => "/etc/carbon/carbon.conf"), :delayed
+  subscribes :restart, resources(:template => platform_options["carbon_schema_config"]), :delayed
+  subscribes :restart, resources(:template => platform_options["carbon_config_dest"]), :delayed
 end
