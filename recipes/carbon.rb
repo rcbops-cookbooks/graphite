@@ -23,6 +23,10 @@
 include_recipe "graphite::common"
 include_recipe "graphite::whisper"
 
+line_receiver_endpoint = get_bind_endpoint("carbon", "line-receiver")
+pickle_receiver_endpoint = get_bind_endpoint("carbon", "pickle-receiver")
+cache_query_endpoint = get_bind_endpoint("carbon", "cache-query")
+
 package "python-carbon" do
   action :upgrade
 end
@@ -37,9 +41,23 @@ template "/etc/carbon/storage-schemas.conf" do
   mode "0644"
 end
 
+template "/etc/carbon/carbon.conf" do
+  source "carbon.conf.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  variables("line_receiver_ip" => line_receiver_endpoint["host"],
+            "line_receiver_port" => line_receiver_endpoint["port"],
+            "pickle_receiver_ip" => pickle_receiver_endpoint["host"],
+            "pickle_receiver_port" => pickle_receiver_endpoint["port"],
+            "cache_query_ip" => cache_query_endpoint["host"],
+            "cache_query_port" => cache_query_endpoint["port"]
+            )
+end
+
 service "carbon-cache" do
   supports :status => true, :restart => true
   action [:enable, :start]
   subscribes :restart, resources(:template => "/etc/carbon/storage-schemas.conf"), :delayed
+  subscribes :restart, resources(:template => "/etc/carbon/carbon.conf"), :delayed
 end
-
