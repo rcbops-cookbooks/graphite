@@ -68,7 +68,8 @@ template platform_options["carbon_config_dest"] do
             "pickle_receiver_ip" => pickle_receiver_endpoint["host"],
             "pickle_receiver_port" => pickle_receiver_endpoint["port"],
             "cache_query_ip" => cache_query_endpoint["host"],
-            "cache_query_port" => cache_query_endpoint["port"]
+            "cache_query_port" => cache_query_endpoint["port"],
+            "apache_user" => platform_options["carbon_apache_user"]
             )
 end
 
