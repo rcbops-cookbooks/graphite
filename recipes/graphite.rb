@@ -44,6 +44,13 @@ end
 
 include_recipe "apache2::mod_status"
 
+# TODO: OMG this needs to be fixed.
+execute "graphite-restore-selinux-context" do
+    command "restorecon -Rv /etc/httpd"
+    action :run
+    only_if do platform?("fedora") end
+end
+
 
 # Workaround to re-enable selinux after installing apache on a fedora machine that has
 # selinux enabled and is currently permissive and the configuration set to enforcing.
