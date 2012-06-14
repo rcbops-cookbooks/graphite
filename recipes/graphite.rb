@@ -20,9 +20,40 @@
 # This recipe installs the graphite web server
 #
 
+#
+# Workaround to install apache2 on a fedora machine with selinux set to enforcing
+# TODO(breu): this should move to a subscription of the template from the apache2 recipe
+#             and it should simply be a restorecon on the configuration file(s) and not
+#             change the selinux mode
+#
+execute "graphite-set-selinux-permissive" do
+  command "/sbin/setenforce Permissive"
+  action :run
+  only_if "[ ! -e /etc/httpd/conf/httpd.conf ] && [ -e /etc/redhat-release ] && [ $(/sbin/sestatus | grep -c '^Current mode:.*enforcing') -eq 1 ]"
+end
+
 include_recipe "graphite::common"
 include_recipe "apache2"
+
+# TODO: OMG this needs to be fixed.
+execute "graphite-restore-selinux-context" do
+    command "restorecon -Rv /etc/httpd"
+    action :run
+    only_if do platform?("fedora") end
+end
+
 include_recipe "apache2::mod_status"
+
+
+# Workaround to re-enable selinux after installing apache on a fedora machine that has
+# selinux enabled and is currently permissive and the configuration set to enforcing.
+# TODO(breu): get the other one working and this won't be necessary
+#
+execute "graphite-set-selinux-enforcing" do
+  command "/sbin/setenforce Enforcing ; restorecon -R /etc/httpd"
+  action :run
+  only_if "[ -e /etc/httpd/conf/httpd.conf ] && [ -e /etc/redhat-release ] && [ $(/sbin/sestatus | grep -c '^Current mode:.*permissive') -eq 1 ] && [ $(/sbin/sestatus | grep -c '^Mode from config file:.*enforcing') -eq 1 ]"
+end
 
 platform_options = node["graphite"]["platform"]
 
@@ -47,6 +78,12 @@ end
 # FIXME: should fix up local settings to point to carbon cache instances,
 # (and memcache servers) but this requires package changes to move local
 # settings someplace not stupid
+
+execute "graphite-restore-selinux-context" do
+    command "restorecon -Rv /etc/httpd"
+    action :run
+    only_if do platform?("fedora") end
+end
 
 web_app "graphite" do
   server_name node["hostname"]

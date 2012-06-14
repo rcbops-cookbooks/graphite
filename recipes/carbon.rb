@@ -57,6 +57,7 @@ if platform?("fedora")
     group "apache"
     mode "0755"
     action :create
+    recursive true
   end
 end
 
