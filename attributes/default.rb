@@ -4,7 +4,7 @@ when "fedora"
     "carbon_packages" => ["carbon"],
     "carbon_service" => "carbon-cache",
     "carbon_config_source" => "carbon.conf.redhat.erb",
-    "carbon_config_dest" => "/etc/carbon/carbon.conf",
+    "carbon_config_dest" => "/etc/graphite/carbon.conf",
     "carbon_schema_config" => "/etc/graphite/storage-schemas.conf.example",
     "whisper_packages" => ["whisper"],
     "graphite_packages" => ["graphite-web", "mod_python"],
