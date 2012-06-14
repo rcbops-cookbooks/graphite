@@ -9,7 +9,8 @@ when "fedora"
     "whisper_packages" => ["whisper"],
     "graphite_packages" => ["graphite-web", "mod_python"],
     "package_overrides" => "",
-    "carbon_apache_user" => "apache"
+    "carbon_apache_user" => "apache",
+    "carbon_conf_dir" => "/etc/graphite"
   }
 when "ubuntu"
   default["graphite"]["platform"] = {
@@ -21,7 +22,8 @@ when "ubuntu"
     "whisper_packages" => ["python-whisper"],
     "graphite_packages" => ["graphite"],
     "package_overrides" => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'",
-    "carbon_apache_user" => "www-data"
+    "carbon_apache_user" => "www-data",
+    "carbon_conf_dir" => "/etc/carbon"
   }
 end
 
