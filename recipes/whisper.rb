@@ -22,7 +22,11 @@
 
 include_recipe "graphite::common"
 
-package "python-whisper" do
-  action :upgrade
-end
+platform_options = node["graphite"]["platform"]
 
+platform_options["whisper_packages"].each do |pkg|
+  package pkg do
+    action :upgrade
+    options platform_options["package_overrides"]
+  end
+end
