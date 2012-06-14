@@ -8,7 +8,8 @@ when "fedora"
     "carbon_schema_config" => "/etc/graphite/storage-schemas.conf",
     "whisper_packages" => ["whisper"],
     "graphite_packages" => ["graphite-web", "mod_python"],
-    "package_overrides" => ""
+    "package_overrides" => "",
+    "carbon_apache_user" => "apache"
   }
 when "ubuntu"
   default["graphite"]["platform"] = {
@@ -20,6 +21,7 @@ when "ubuntu"
     "whisper_packages" => ["python-whisper"],
     "graphite_packages" => ["graphite"],
     "package_overrides" => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'",
+    "carbon_apache_user" => "www-data"
   }
 end
 
