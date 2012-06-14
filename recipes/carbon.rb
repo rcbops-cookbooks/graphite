@@ -32,6 +32,11 @@ platform_options["carbon_packages"].each do |pkg|
   end
 end
 
+line_receiver_endpoint = get_bind_endpoint("carbon", "line-receiver")
+pickle_receiver_endpoint = get_bind_endpoint("carbon", "pickle-receiver")
+cache_query_endpoint = get_bind_endpoint("carbon", "cache-query")
+
+
 # TODO: we should tune retention here, based on attributes.
 # for now, we'll just drop a simple schema for 1m
 # updates and retention of 1d.
@@ -44,21 +49,27 @@ template platform_options["carbon_schema_config"] do
 end
 
 # TODO(breu): clean this up
-if platform?("fedora")
-  template platform_options["carbon_config_dest"] do
-    source platform_options["carbon_config_source"]
-    owner "root"
-    group "root"
-    mode "0644"
-  end
+directory "/var/lib/graphite/storage/log/webapp" do
+  owner "apache"
+  group "apache"
+  mode "0755"
+  action :create
+  recursive true
+  only_if do platform?("fedora") end 
+end
 
-  directory "/var/lib/graphite/storage/log/webapp" do
-    owner "apache"
-    group "apache"
-    mode "0755"
-    action :create
-    recursive true
-  end
+template platform_options["carbon_config_dest"] do
+  source "carbon.conf.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  variables("line_receiver_ip" => line_receiver_endpoint["host"],
+            "line_receiver_port" => line_receiver_endpoint["port"],
+            "pickle_receiver_ip" => pickle_receiver_endpoint["host"],
+            "pickle_receiver_port" => pickle_receiver_endpoint["port"],
+            "cache_query_ip" => cache_query_endpoint["host"],
+            "cache_query_port" => cache_query_endpoint["port"]
+            )
 end
 
 service "carbon-cache" do
@@ -66,5 +77,5 @@ service "carbon-cache" do
   supports :status => true, :restart => true
   action [:enable, :start]
   subscribes :restart, resources(:template => platform_options["carbon_schema_config"]), :delayed
+  subscribes :restart, resources(:template => platform_options["carbon_config_dest"]), :delayed
 end
-
