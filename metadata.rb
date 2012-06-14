@@ -8,3 +8,7 @@ version          "0.0.1"
 %W{apt apache2 osops-utils}.each do |dep|
   depends dep
 end
+
+%W{ubuntu}.each do |distro|
+  supports distro
+end
