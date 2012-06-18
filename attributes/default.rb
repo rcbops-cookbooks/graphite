@@ -27,8 +27,11 @@ when "ubuntu"
   }
 end
 
+# FIXME: right now, the statsd network is ignored -- the statsd-c implementation
+# we're using binds 0.0.0.0.
 default["statsd"]["flush_interval"] = 60
-
+default["statsd"]["services"]["statsd"]["port"] = 8125
+default["statsd"]["services"]["statsd"]["network"] = "management"
 
 default["carbon"]["services"]["line-receiver"]["port"] = 2003
 default["carbon"]["services"]["line-receiver"]["network"] = "management"
