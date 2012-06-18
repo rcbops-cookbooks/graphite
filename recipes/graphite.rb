@@ -26,6 +26,7 @@
 #             and it should simply be a restorecon on the configuration file(s) and not
 #             change the selinux mode
 #
+
 execute "graphite-set-selinux-permissive" do
   command "/sbin/setenforce Permissive"
   action :run
@@ -33,6 +34,7 @@ execute "graphite-set-selinux-permissive" do
 end
 
 include_recipe "graphite::common"
+include_recipe "graphite::statsd"
 include_recipe "apache2"
 
 # TODO: OMG this needs to be fixed.
@@ -97,4 +99,3 @@ web_app "graphite" do
   server_aliases [ node["fqdn"] ]
   template "graphite_app.erb"
 end
-

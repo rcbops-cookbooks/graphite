@@ -27,6 +27,9 @@ when "ubuntu"
   }
 end
 
+default["statsd"]["flush_interval"] = 60
+
+
 default["carbon"]["services"]["line-receiver"]["port"] = 2003
 default["carbon"]["services"]["line-receiver"]["network"] = "management"
 

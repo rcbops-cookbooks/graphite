@@ -5,10 +5,10 @@ description      "Installs/Configures graphite"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          "0.0.2"
 
-%W{apt apache2 osops-utils}.each do |dep|
+%W{apt apache2 osops-utils yum}.each do |dep|
   depends dep
 end
 
-%W{ubuntu}.each do |distro|
+%W{ubuntu fedora}.each do |distro|
   supports distro
 end
