@@ -20,6 +20,16 @@
 # This recipe installs the graphite web server
 #
 
+
+# TODO(shep): Need to compare against horizon ip:port for collision
+# for now just set it to 8080 if horizon and graphite are on the same server
+if node["roles"].include?("horizon-server")
+  node.set["graphite"]["services"]["api"]["port"] = 8080
+  if not node["apache"]["listen_ports"].include?("8080")
+    node["apache"]["listen_ports"].push("8080")
+  end
+end
+
 #
 # Workaround to install apache2 on a fedora machine with selinux set to enforcing
 # TODO(breu): this should move to a subscription of the template from the apache2 recipe
@@ -91,13 +101,7 @@ execute "graphite-restore-selinux-context" do
     only_if do platform?("fedora") end
 end
 
-# TODO(shep): Need to compare against horizon ip:port for collision
-# for now just set it to 8080 if horizon and graphite are on the same server
-if node["roles"].include?("horizon-server")
-  node.set["graphite"]["services"]["api"]["port"] = 8080
-end
 graphite_endpoint = get_bind_endpoint("graphite", "api")
-
 web_app "graphite" do
   server_name node["hostname"]
   server_aliases [ node["fqdn"] ]
