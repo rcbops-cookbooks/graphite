@@ -4,7 +4,7 @@ default["statsd"]["flush_interval"] = 60
 default["statsd"]["services"]["statsd"]["port"] = 8125
 default["statsd"]["services"]["statsd"]["network"] = "management"
 
-default["graphite"]["services"]["api"]["port"] = 8080
+default["graphite"]["services"]["api"]["port"] = 80
 default["graphite"]["services"]["api"]["network"] = "public"
 
 default["carbon"]["services"]["line-receiver"]["port"] = 2003
