@@ -1,4 +1,4 @@
-<VirtualHost *:80>
+<VirtualHost <%= @params[:bind_host] %>:<%= @params[:bind_port] %>>
         ServerName <%= @params[:server_name] %>
 
         <Location "/">
