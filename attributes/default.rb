@@ -28,7 +28,9 @@ when "fedora"
     "graphite_packages" => ["graphite-web", "mod_python"],
     "package_overrides" => "",
     "carbon_apache_user" => "apache",
-    "carbon_conf_dir" => "/etc/graphite"
+    "carbon_conf_dir" => "/etc/graphite",
+    "statsd_service" => "statsd-c",
+    "statsd_template" => "/etc/statsd-c/config"
   }
 when "ubuntu"
   default["graphite"]["platform"] = {
@@ -41,6 +43,8 @@ when "ubuntu"
     "graphite_packages" => ["graphite"],
     "package_overrides" => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'",
     "carbon_apache_user" => "www-data",
-    "carbon_conf_dir" => "/etc/carbon"
+    "carbon_conf_dir" => "/etc/carbon",
+    "statsd_service" => "statsd",
+    "statsd_template" => "/etc/default/statsd"
   }
 end

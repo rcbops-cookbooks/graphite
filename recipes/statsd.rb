@@ -20,20 +20,20 @@
 # This recipe installs the statsd server
 #
 
+platform_options = node["graphite"]["platform"]
 
-# Hey Joe, this isn't going to work on teh fedoras.  Can fix?  :p
 package "statsd-c" do
   action :install
 end
 
-service "statsd" do
+service platform_options["statsd_service"] do
   supports :status => true, :restart => true
   action [ :start, :enable ]
 end
 
 carbon_endpoint = get_bind_endpoint("carbon","line-receiver")
 
-template "/etc/default/statsd" do
+template platform_options["statsd_template"] do
   source "statsd-default.erb"
   owner "root"
   group "root"
@@ -43,5 +43,5 @@ template "/etc/default/statsd" do
             "flush_interval" => node["statsd"]["flush_interval"]
             )
 
-  notifies :restart, resources(:service => "statsd"), :immediately
+  notifies :restart, resources(:service => platform_options["statsd_service"]), :immediately
 end
