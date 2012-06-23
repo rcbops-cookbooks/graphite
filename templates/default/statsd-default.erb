@@ -30,3 +30,4 @@ GANGLIA_HOST=""
 CARBON_HOST="<%= @carbon_host %>"
 
 DAEMON_ARGS="-r <%= @carbon_port %> -s /var/lib/statsd/state.json -F <%= @flush_interval %>"
+STATSD_OPTIONS=" -D -l /var/lock/statsd-c -s /var/lib/statsd-c/state.json -F h_interval %> -R <%= @carbon_host %> -r <%= @carbon_port %> "
