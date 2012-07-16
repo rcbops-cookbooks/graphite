@@ -109,3 +109,12 @@ web_app "graphite" do
   bind_host graphite_endpoint["host"]
   bind_port graphite_endpoint["port"] 
 end
+
+# This angers Shep because apache:listen_ports is getting stomped somewhere
+template "#{node["apache"]["dir"]}/ports.conf" do
+  source "ports.conf.erb"
+  cookbook "apache2"
+  variables :apache_listen_ports => node["apache"]["listen_ports"].map{|p| p.to_i}.uniq
+  notifies :restart, resources(:service => "apache2")
+  mode 0644
+end
