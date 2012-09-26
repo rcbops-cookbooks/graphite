@@ -32,6 +32,21 @@ when "fedora"
     "statsd_service" => "statsd-c",                                 # node_attribute
     "statsd_template" => "/etc/statsd-c/config"                     # node_attribute
   }
+when "redhat", "centos"
+  default["graphite"]["platform"] = {
+    "carbon_packages" => ["carbon"],                                # node_attribute
+    "carbon_service" => "carbon-cache",                             # node_attribute
+    "carbon_config_source" => "carbon.conf.redhat.erb",             # node_attribute
+    "carbon_config_dest" => "/opt/graphite/conf/carbon.conf",            # node_attribute
+    "carbon_schema_config" => "/opt/graphite/conf/storage-schemas.conf", # node_attribute
+    "whisper_packages" => ["whisper"],                              # node_attribute
+    "graphite_packages" => ["graphite-web", "mod_python"],          # node_attribute
+    "package_overrides" => "",                                      # node_attribute
+    "carbon_apache_user" => "apache",                               # node_attribute
+    "carbon_conf_dir" => "/opt/graphite/conf",                           # node_attribute
+    "statsd_service" => "statsd-c",                                 # node_attribute
+    "statsd_template" => "/etc/statsd-c/config"                     # node_attribute
+  }
 when "ubuntu"
   default["graphite"]["platform"] = {
     "carbon_packages" =>["python-carbon"],                          # node_attribute
