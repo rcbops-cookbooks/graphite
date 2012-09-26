@@ -55,7 +55,7 @@ directory "/var/lib/graphite/storage/log/webapp" do
   mode "0755"
   action :create
   recursive true
-  only_if do platform?("fedora") end 
+  only_if { platform?("fedora", "redhat", "centos") }
 end
 
 template platform_options["carbon_config_dest"] do
