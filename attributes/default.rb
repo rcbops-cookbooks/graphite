@@ -25,7 +25,7 @@ when "fedora"
     "carbon_config_dest" => "/etc/graphite/carbon.conf",            # node_attribute
     "carbon_schema_config" => "/etc/graphite/storage-schemas.conf", # node_attribute
     "whisper_packages" => ["whisper"],                              # node_attribute
-    "graphite_packages" => ["graphite-web", "mod_python", "django-tagging"],          # node_attribute
+    "graphite_packages" => ["django-tagging", "graphite-web", "mod_python"],          # node_attribute
     "package_overrides" => "",                                      # node_attribute
     "carbon_apache_user" => "apache",                               # node_attribute
     "carbon_conf_dir" => "/etc/graphite",                           # node_attribute
@@ -41,7 +41,7 @@ when "redhat", "centos"
     "carbon_config_dest" => "/opt/graphite/conf/carbon.conf",            # node_attribute
     "carbon_schema_config" => "/opt/graphite/conf/storage-schemas.conf", # node_attribute
     "whisper_packages" => ["whisper"],                              # node_attribute
-    "graphite_packages" => ["graphite-web", "mod_python", "django-tagging"],          # node_attribute
+    "graphite_packages" => ["django-tagging", "graphite-web", "mod_python"],          # node_attribute
     "package_overrides" => "",                                      # node_attribute
     "carbon_apache_user" => "apache",                               # node_attribute
     "carbon_conf_dir" => "/opt/graphite/conf",                           # node_attribute
