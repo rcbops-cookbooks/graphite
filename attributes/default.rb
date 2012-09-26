@@ -25,12 +25,13 @@ when "fedora"
     "carbon_config_dest" => "/etc/graphite/carbon.conf",            # node_attribute
     "carbon_schema_config" => "/etc/graphite/storage-schemas.conf", # node_attribute
     "whisper_packages" => ["whisper"],                              # node_attribute
-    "graphite_packages" => ["graphite-web", "mod_python"],          # node_attribute
+    "graphite_packages" => ["graphite-web", "mod_python", "django-tagging"],          # node_attribute
     "package_overrides" => "",                                      # node_attribute
     "carbon_apache_user" => "apache",                               # node_attribute
     "carbon_conf_dir" => "/etc/graphite",                           # node_attribute
     "statsd_service" => "statsd-c",                                 # node_attribute
-    "statsd_template" => "/etc/statsd-c/config"                     # node_attribute
+    "statsd_template" => "/etc/statsd-c/config",                     # node_attribute
+    "graphite_pythonpath" => "/opt/graphite/webapp"
   }
 when "redhat", "centos"
   default["graphite"]["platform"] = {
@@ -45,7 +46,8 @@ when "redhat", "centos"
     "carbon_apache_user" => "apache",                               # node_attribute
     "carbon_conf_dir" => "/opt/graphite/conf",                           # node_attribute
     "statsd_service" => "statsd-c",                                 # node_attribute
-    "statsd_template" => "/etc/statsd-c/config"                     # node_attribute
+    "statsd_template" => "/etc/statsd-c/config",                     # node_attribute
+    "graphite_pythonpath" => "/opt/graphite/webapp"
   }
 when "ubuntu"
   default["graphite"]["platform"] = {
@@ -60,6 +62,7 @@ when "ubuntu"
     "carbon_apache_user" => "www-data",                             # node_attribute
     "carbon_conf_dir" => "/etc/carbon",                             # node_attribute
     "statsd_service" => "statsd",                                   # node_attribute
-    "statsd_template" => "/etc/default/statsd"                      # node_attribute
+    "statsd_template" => "/etc/default/statsd" ,                     # node_attribute
+    "graphite_pythonpath" => "/usr/share/graphite/webapp"
   }
 end

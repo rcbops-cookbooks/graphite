@@ -13,7 +13,7 @@
         SetEnv DJANGO_SETTINGS_MODULE graphite.settings
         PythonDebug Off
         PythonAutoReload Off
-        PythonPath "['/usr/share/graphite/webapp'] + sys.path"
+        PythonPath "['<%= @params[:graphite_pythonpath] %>'] + sys.path"
     </Location>
 
     <Location /server-status>
@@ -31,7 +31,7 @@
         SetHandler None
     </Location>
 
-    Alias /content/ "/usr/share/graphite/webapp/content/"
+    Alias /content/ "<%= @params[:graphite_pythonpath] %>/content/"
     Alias /media/ "/usr/lib/pymodules/python2.7/django/contrib/admin/media/"
     ErrorLog /var/lib/graphite/storage/log/webapp/webapp-error.log
     CustomLog /var/lib/graphite/storage/log/webapp/webapp-access.log common

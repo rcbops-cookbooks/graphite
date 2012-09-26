@@ -51,7 +51,7 @@ include_recipe "apache2"
 execute "graphite-restore-selinux-context" do
     command "restorecon -Rv /etc/httpd"
     action :run
-    only_if do platform?("fedora") end
+    only_if do platform?("fedora", "redhat", "centos") end
 end
 
 include_recipe "apache2::mod_status"
@@ -60,7 +60,7 @@ include_recipe "apache2::mod_status"
 execute "graphite-restore-selinux-context" do
     command "restorecon -Rv /etc/httpd"
     action :run
-    only_if do platform?("fedora") end
+    only_if do platform?("fedora", "redhat", "centos") end
 end
 
 
@@ -98,16 +98,17 @@ end
 execute "graphite-restore-selinux-context" do
     command "restorecon -Rv /etc/httpd"
     action :run
-    only_if do platform?("fedora") end
+    only_if do platform?("fedora", "redhat", "centos") end
 end
 
 graphite_endpoint = get_bind_endpoint("graphite", "api")
 web_app "graphite" do
   server_name node["hostname"]
   server_aliases [ node["fqdn"] ]
+  graphite_pythonpath platform_options['graphite_pythonpath']
   template "graphite_app.erb"
   bind_host graphite_endpoint["host"]
-  bind_port graphite_endpoint["port"] 
+  bind_port graphite_endpoint["port"]
 end
 
 # This angers Shep because apache:listen_ports is getting stomped somewhere
