@@ -18,8 +18,6 @@
 #
 
 # This recipe installs the graphite web server
-#
-
 
 # TODO(shep): Need to compare against horizon ip:port for collision
 # for now just set it to 8080 if horizon and graphite are on the same server
@@ -63,7 +61,6 @@ execute "graphite-restore-selinux-context" do
     only_if do platform?("fedora", "redhat", "centos") end
 end
 
-
 # Workaround to re-enable selinux after installing apache on a fedora machine that has
 # selinux enabled and is currently permissive and the configuration set to enforcing.
 # TODO(breu): get the other one working and this won't be necessary
@@ -106,6 +103,7 @@ web_app "graphite" do
   server_name node["hostname"]
   server_aliases [ node["fqdn"] ]
   graphite_pythonpath platform_options['graphite_pythonpath']
+  graphite_log_dir platform_options['graphite_log_dir']
   template "graphite_app.erb"
   bind_host graphite_endpoint["host"]
   bind_port graphite_endpoint["port"]

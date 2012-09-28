@@ -35,9 +35,9 @@
 #   PID_DIR        = /var/run/
 #
 
-LOCAL_DATA_DIR = /var/lib/graphite/storage/whisper/
-CONF_DIR = <%= @carbon_conf_dir %>
-LOG_DIR = /var/log/carbon/carbon/
+LOCAL_DATA_DIR = <%= @graphite_root %>/storage/whisper/
+CONF_DIR = <%= @carbon_conf_dir %>/
+LOG_DIR = <%= @carbon_log_dir %>/
 PID_DIR = /var/run/
 
 # Specify the user to drop privileges to
@@ -116,12 +116,12 @@ LOG_UPDATES = False
 # setup with this, you will need to hard code the template, or
 # make the recipe smarter.  Patches accepted!
 
-[relay]
-LINE_RECEIVER_INTERFACE = <%= @line_receiver_ip %>
-LINE_RECEIVER_PORT = <%= @line_receiver_port %>
-
-PICKLE_RECEIVER_INTERFACE = <%= @pickle_receiver_ip %>
-PICKLE_RECEIVER_PORT = <%= @pickle_receiver_port %>
-
-CACHE_SERVERS = server1, server2, server3
-MAX_QUEUE_SIZE = 10000
+#[relay]
+#LINE_RECEIVER_INTERFACE = <%= @line_receiver_ip %>
+#LINE_RECEIVER_PORT = <%= @line_receiver_port %>
+#
+#PICKLE_RECEIVER_INTERFACE = <%= @pickle_receiver_ip %>
+#PICKLE_RECEIVER_PORT = <%= @pickle_receiver_port %>
+#
+#CACHE_SERVERS = server1, server2, server3
+#MAX_QUEUE_SIZE = 10000

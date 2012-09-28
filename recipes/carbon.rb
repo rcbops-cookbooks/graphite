@@ -18,7 +18,6 @@
 #
 
 # This recipe installs whisper and carbon-cache
-#
 
 include_recipe "graphite::common"
 include_recipe "graphite::whisper"
@@ -36,29 +35,18 @@ line_receiver_endpoint = get_bind_endpoint("carbon", "line-receiver")
 pickle_receiver_endpoint = get_bind_endpoint("carbon", "pickle-receiver")
 cache_query_endpoint = get_bind_endpoint("carbon", "cache-query")
 
-
 # TODO: we should tune retention here, based on attributes.
 # for now, we'll just drop a simple schema for 1m
 # updates and retention of 1d.
 
-template platform_options["carbon_schema_config"] do
+template "#{platform_options["carbon_conf_dir"]}/storage-schemas.conf" do
   source "storage-schemas.conf.erb"
   owner "root"
   group "root"
   mode "0644"
 end
 
-# TODO(breu): clean this up
-directory "/var/lib/graphite/storage/log/webapp" do
-  owner "apache"
-  group "apache"
-  mode "0755"
-  action :create
-  recursive true
-  only_if { platform?("fedora", "redhat", "centos") }
-end
-
-template platform_options["carbon_config_dest"] do
+template "#{platform_options["carbon_conf_dir"]}/carbon.conf" do
   source "carbon.conf.erb"
   owner "root"
   group "root"
@@ -70,14 +58,16 @@ template platform_options["carbon_config_dest"] do
             "cache_query_ip" => cache_query_endpoint["host"],
             "cache_query_port" => cache_query_endpoint["port"],
             "apache_user" => platform_options["carbon_apache_user"],
-            "carbon_conf_dir" => platform_options["carbon_conf_dir"]
+            "carbon_conf_dir" => platform_options["carbon_conf_dir"],
+            "carbon_log_dir" => platform_options["carbon_log_dir"],
+            "graphite_root" => platform_options["graphite_root"]
             )
 end
 
 service "carbon-cache" do
   service_name platform_options["carbon_service"]
   supports :status => true, :restart => true
-  action [:enable, :start]
-  subscribes :restart, resources(:template => platform_options["carbon_schema_config"]), :delayed
-  subscribes :restart, resources(:template => platform_options["carbon_config_dest"]), :delayed
+  action [:enable, :restart]
+  subscribes :restart, resources(:template => "#{platform_options["carbon_conf_dir"]}/storage-schemas.conf"), :delayed
+  subscribes :restart, resources(:template => "#{platform_options["carbon_conf_dir"]}/carbon.conf"), :delayed
 end
