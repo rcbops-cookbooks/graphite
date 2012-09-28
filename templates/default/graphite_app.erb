@@ -33,7 +33,7 @@
 
     Alias /content/ "<%= @params[:graphite_pythonpath] %>/content/"
     Alias /media/ "/usr/lib/pymodules/python2.7/django/contrib/admin/media/"
-    ErrorLog /var/lib/graphite/storage/log/webapp/webapp-error.log
-    CustomLog /var/lib/graphite/storage/log/webapp/webapp-access.log common
+    ErrorLog "<%= @params[:graphite_log_dir] %>/webapp-error.log"
+    CustomLog "<%= @params[:graphite_log_dir] %>/webapp-access.log" common
 
 </VirtualHost>
