@@ -4,7 +4,11 @@
 <%= node["custom_template_banner"] %>
 <% end %>
 
-[everything_1min_1day]
-priority = 100
-pattern = .*
-retentions = 60:1440
+<% @storage_schemas.each do |k, v| %>
+<%=  "\n[#{k}]" %>
+<%   v.each do |a,b| %>
+<%=    "#{a} = #{b}" %>
+<%  end %>
+<% end %>
+
+

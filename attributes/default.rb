@@ -16,6 +16,14 @@ default["carbon"]["services"]["pickle-receiver"]["network"] = "management"  # no
 default["carbon"]["services"]["cache-query"]["port"] = 7002                 # node_attribute
 default["carbon"]["services"]["cache-query"]["network"] = "management"      # node_attribute
 
+default["carbon"]["storage_schemas"] = {
+    "everything_1min_1day" => {
+        "priority" => "100",
+        "pattern" => ".*",
+        "retentions" => "60:1440"
+    }
+}
+
 case platform
 when "redhat", "centos", "fedora"
   default["graphite"]["platform"] = {

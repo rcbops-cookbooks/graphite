@@ -35,15 +35,14 @@ line_receiver_endpoint = get_bind_endpoint("carbon", "line-receiver")
 pickle_receiver_endpoint = get_bind_endpoint("carbon", "pickle-receiver")
 cache_query_endpoint = get_bind_endpoint("carbon", "cache-query")
 
-# TODO: we should tune retention here, based on attributes.
-# for now, we'll just drop a simple schema for 1m
-# updates and retention of 1d.
+storage_schemas = node["carbon"]["storage_schemas"]
 
 template "#{platform_options["carbon_conf_dir"]}/storage-schemas.conf" do
   source "storage-schemas.conf.erb"
   owner "root"
   group "root"
   mode "0644"
+  variables :storage_schemas => storage_schemas
 end
 
 template "#{platform_options["carbon_conf_dir"]}/carbon.conf" do
