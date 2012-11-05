@@ -20,7 +20,13 @@
 # This recipe installs the statsd server
 #
 
-platform_options = node["graphite"]["platform"]
+if not node['package_component'].nil?
+  release = node['package_component']
+else
+  release = "essex-final"
+end
+
+platform_options = node["graphite"]["platform"][release]
 
 package "statsd-c" do
   action :install

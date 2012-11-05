@@ -71,7 +71,13 @@ execute "graphite-set-selinux-enforcing" do
   only_if "[ -e /etc/httpd/conf/httpd.conf ] && [ -e /etc/redhat-release ] && [ $(/sbin/sestatus | grep -c '^Current mode:.*permissive') -eq 1 ] && [ $(/sbin/sestatus | grep -c '^Mode from config file:.*enforcing') -eq 1 ]"
 end
 
-platform_options = node["graphite"]["platform"]
+if not node['package_component'].nil?
+  release = node['package_component']
+else
+  release = "essex-final"
+end
+
+platform_options = node["graphite"]["platform"][release]
 
 platform_options["graphite_packages"].each do |pkg|
   package pkg do
