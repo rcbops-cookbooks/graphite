@@ -22,7 +22,13 @@
 
 include_recipe "graphite::common"
 
-platform_options = node["graphite"]["platform"]
+if not node['package_component'].nil?
+  release = node['package_component']
+else
+  release = "essex-final"
+end
+
+platform_options = node["graphite"]["platform"][release]
 
 platform_options["whisper_packages"].each do |pkg|
   package pkg do
