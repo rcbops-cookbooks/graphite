@@ -32,7 +32,7 @@ platform_options = node["graphite"]["platform"][release]
 
 platform_options["carbon_packages"].each do |pkg|
   package pkg do
-    action :upgrade
+    action :install
     options platform_options["package_overrides"]
   end
 end
