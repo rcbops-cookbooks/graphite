@@ -31,7 +31,7 @@ when "redhat", "centos", "fedora"
     "carbon_apache_user" => "apache",                                       # node_attribute
     "carbon_conf_dir" => "/opt/graphite/conf",                              # node_attribute
     "carbon_log_dir" => "/var/log/carbon/carbon",                           # node_attribute
-    "graphite_packages" => ["bitmap", "bitmap-fonts", "pycairo",            # node_attribute
+    "graphite_packages" => ["bitmap", "bitmap-fonts-compat", "pycairo",            # node_attribute
         "django-tagging", "graphite-web", "mod_python"],
     "graphite_pythonpath" => "/opt/graphite/webapp",
     "graphite_root" => "/opt/graphite",                                     # node_attribute
@@ -46,7 +46,7 @@ when "redhat", "centos", "fedora"
     "carbon_apache_user" => "apache",                                       # node_attribute
     "carbon_conf_dir" => "/opt/graphite/conf",                              # node_attribute
     "carbon_log_dir" => "/var/log/carbon/carbon",                           # node_attribute
-    "graphite_packages" => ["bitmap", "bitmap-fonts", "pycairo",            # node_attribute
+    "graphite_packages" => ["bitmap", "bitmap-fonts-compat", "pycairo",            # node_attribute
         "Django14", "django-tagging", "graphite-web", "mod_python"],
     "graphite_pythonpath" => "/opt/graphite/webapp",
     "graphite_root" => "/opt/graphite",                                     # node_attribute
