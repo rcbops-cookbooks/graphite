@@ -25,7 +25,7 @@ include_recipe "graphite::common"
 if not node['package_component'].nil?
   release = node['package_component']
 else
-  release = "essex-final"
+  release = "folsom"
 end
 
 platform_options = node["graphite"]["platform"][release]
