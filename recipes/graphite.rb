@@ -24,7 +24,7 @@
 if node["roles"].include?("horizon-server")
   node.set["graphite"]["services"]["api"]["port"] = 8080
   if not node["apache"]["listen_ports"].include?("8080")
-    node["apache"]["listen_ports"].push("8080")
+    node.set["apache"]["listen_ports"].push("8080")
   end
 end
 
