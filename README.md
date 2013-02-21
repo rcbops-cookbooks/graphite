@@ -1,7 +1,9 @@
 Description
 ===========
 
-Installs and configures graphite (http://graphite.wikidot.com/) and associated components.
+Installs and configures graphite and associated components
+
+http://graphite.wikidot.com/
 
 Packages are installed from the OSOps team PPA:
 
@@ -10,41 +12,75 @@ https://launchpad.net/~osops-packaging/+archive/ppa
 Requirements
 ============
 
-Ubuntu 12.04 (Precise)
+Chef 0.10.0 or higher required (for Chef environment use)
 
-Opscode "apt" cookbook
+Platform
+--------
+
+* CentOS >= 6.3
+* Ubuntu >= 12.04
+
+Cookbooks
+---------
+
+The following cookbooks are dependencies:
+
+* apache2
+* osops-utils
 
 Attributes
 ==========
 
-node[:graphite][:password] sets the default graphite root password, otherwise a
-random password will be assigned
+* `statsd["flush_interval"]` - How often to aggregate stats and send to graphite (seconds)
+* `statsd["services"]["statsd"]["port"]` - Port
+* `statsd["services"]["statsd"]["network"]` - `osops_networks` network name which service operates on
 
-Carbon
-------
+* `graphite["services"]["api"]["port"]` - Port
+* `graphite["services"]["api"]["network"]` - `osops_networks` network name which service operates on
 
-Carbon endpoints can be controlled using osops endpoints.  See osops-utils
-for examples.
+* `carbon["services"]["line-receiver"]["port"]` - Port
+* `carbon["services"]["line-receiver"]["network"]` - `osops_networks` network name which service operates on
 
-Overridable endpoints:
+* `carbon["services"]["pickle-receiver"]["port"]` - Port
+* `carbon["services"]["pickle-receiver"]["network"]` - `osops_networks` network name which service operates on
 
-Line receiver -- what port and ip the line receiver endpoint listens to
+* `carbon["services"]["cache-query"]["port"]` - Port
+* `carbon["services"]["cache-query"]["network"]` - `osops_networks` network name which service operates on
 
- * node["carbon"]["services"]["line-reciever"]["port"] (default 2003)
- * node["carbon"]["services"]["line-receiver"]["network"] (default "management")
+* `carbon["storage_schemas"]` - Hash for storage schema options
 
-Pickle receiver -- what port and ip the pickle receiver endpoint listens to
-
- * node["carbon"]["services"]["pickle-reciever"]["port"] (default 2004)
- * node["carbon"]["services"]["pickle-receiver"]["network"] (default "management")
-
-Cache query -- what port and ip the cache-query interface listens to
-
- * node["carbon"]["services"]["cache-query"]["port"] (default 7002)
- * node["carbon"]["services"]["cache-query"]["network"] (default "management")
+* `graphite["platform"]` - Hash of platform specific package/service names and options
 
 Usage
 =====
 
-recipe[graphite::carbon] will install a carbon-cache node
-recipe[graphite::graphite] will install the graphite web dashboard
+* recipe[graphite::carbon] will install carbon-cache
+* recipe[graphite::graphite] will install the graphite web dashboard
+* recipe[graphite::statsd] will install statsd
+* recipe[graphite::whisper] will install the whisper database
+
+License and Author
+==================
+
+Author:: Justin Shepherd (<justin.shepherd@rackspace.com>)  
+Author:: Jason Cannavale (<jason.cannavale@rackspace.com>)  
+Author:: Ron Pedde (<ron.pedde@rackspace.com>)  
+Author:: Joseph Breu (<joseph.breu@rackspace.com>)  
+Author:: William Kelly (<william.kelly@rackspace.com>)  
+Author:: Darren Birkett (<darren.birkett@rackspace.co.uk>)  
+Author:: Evan Callicoat (<evan.callicoat@rackspace.com>)  
+Author:: Matt Thompson (<matt.thompson@rackspace.co.uk>)  
+
+Copyright 2012, Rackspace US, Inc.  
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
