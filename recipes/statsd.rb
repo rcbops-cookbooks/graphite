@@ -20,13 +20,7 @@
 # This recipe installs the statsd server
 #
 
-if not node['package_component'].nil?
-  release = node['package_component']
-else
-  release = "folsom"
-end
-
-platform_options = node["graphite"]["platform"][release]
+platform_options = node["graphite"]["platform"]
 
 package "statsd-c" do
   action :install

@@ -26,22 +26,7 @@ default["carbon"]["storage_schemas"] = {
 
 case platform
 when "redhat", "centos", "fedora"
-  default["graphite"]["platform"]["essex-final"] = {                                                   # node_attribute
-    "carbon_packages" => ["carbon"],                                        # node_attribute
-    "carbon_apache_user" => "apache",                                       # node_attribute
-    "carbon_conf_dir" => "/opt/graphite/conf",                              # node_attribute
-    "carbon_log_dir" => "/var/log/carbon/carbon",                           # node_attribute
-    "graphite_packages" => ["bitmap", "bitmap-fonts-compat", "pycairo",            # node_attribute
-        "django-tagging", "graphite-web", "mod_python"],
-    "graphite_pythonpath" => "/opt/graphite/webapp",
-    "graphite_root" => "/opt/graphite",                                     # node_attribute
-    "graphite_log_dir" => "/opt/graphite/storage/log/webapp",               # node_attribute
-    "whisper_packages" => ["whisper"],                                      # node_attribute
-    "statsd_service" => "statsd-c",                                         # node_attribute
-    "statsd_template" => "/etc/statsd-c/config",                            # node_attribute
-    "package_overrides" => ""                                               # node_attribute
-  }
-  default["graphite"]["platform"]["folsom"] = {                                                   # node_attribute
+  default["graphite"]["platform"] = {                                                   # node_attribute
     "carbon_packages" => ["carbon"],                                        # node_attribute
     "carbon_apache_user" => "apache",                                       # node_attribute
     "carbon_conf_dir" => "/opt/graphite/conf",                              # node_attribute
@@ -57,21 +42,7 @@ when "redhat", "centos", "fedora"
     "package_overrides" => ""                                               # node_attribute
   }
 when "ubuntu"
-  default["graphite"]["platform"]["essex-final"] = {
-    "carbon_packages" => ["python-carbon"],                                 # node_attribute
-    "carbon_apache_user" => "www-data",                                     # node_attribute
-    "carbon_conf_dir" => "/etc/carbon",                                     # node_attribute
-    "carbon_log_dir" => "/var/log/carbon/carbon",                           # node_attribute
-    "graphite_packages" => ["python-cairo","graphite"],                     # node_attribute
-    "graphite_pythonpath" => "/usr/share/graphite/webapp",                  # node_attribute
-    "graphite_root" => "/var/lib/graphite",                                 # node_attribute
-    "graphite_log_dir" => "/var/lib/graphite/storage/log/webapp",           # node_attribute
-    "whisper_packages" => ["python-whisper"],                               # node_attribute
-    "statsd_service" => "statsd",                                           # node_attribute
-    "statsd_template" => "/etc/default/statsd",                             # node_attribute
-    "package_overrides" => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'" # node_attribute
-  }
-  default["graphite"]["platform"]["folsom"] = {
+  default["graphite"]["platform"] = {
     "carbon_packages" => ["python-carbon"],                                 # node_attribute
     "carbon_apache_user" => "www-data",                                     # node_attribute
     "carbon_conf_dir" => "/etc/carbon",                                     # node_attribute
