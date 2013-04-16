@@ -22,13 +22,7 @@
 
 include_recipe "graphite::common"
 
-if not node['package_component'].nil?
-  release = node['package_component']
-else
-  release = "folsom"
-end
-
-platform_options = node["graphite"]["platform"][release]
+platform_options = node["graphite"]["platform"]
 
 platform_options["whisper_packages"].each do |pkg|
   package pkg do
