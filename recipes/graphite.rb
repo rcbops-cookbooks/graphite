@@ -24,21 +24,25 @@
 if node["roles"].include?("horizon-server")
   node.set["graphite"]["services"]["api"]["port"] = 8080
   if not node["apache"]["listen_ports"].include?("8080")
-    node.set["apache"]["listen_ports"].push("8080")
+    ports = node["apache"]["listen_ports"]
+    node.set["apache"]["listen_ports"] = ports + ["8080"]
   end
 end
 
 #
-# Workaround to install apache2 on a fedora machine with selinux set to enforcing
-# TODO(breu): this should move to a subscription of the template from the apache2 recipe
-#             and it should simply be a restorecon on the configuration file(s) and not
-#             change the selinux mode
+# Workaround to install apache2 on a fedora machine with selinux set to
+# enforcing
+# TODO(breu): this should move to a subscription of the template from the
+# apache2 recipe and it should simply be a restorecon on the configuration
+# file(s) and not change the selinux mode
 #
 
 execute "graphite-set-selinux-permissive" do
   command "/sbin/setenforce Permissive"
   action :run
-  only_if "[ ! -e /etc/httpd/conf/httpd.conf ] && [ -e /etc/redhat-release ] && [ $(/sbin/sestatus | grep -c '^Current mode:.*enforcing') -eq 1 ]"
+  only_if "[ ! -e /etc/httpd/conf/httpd.conf ] &&"\
+    " [ -e /etc/redhat-release ] &&"\
+      " [ $(/sbin/sestatus | grep -c '^Current mode:.*enforcing') -eq 1 ]"
 end
 
 include_recipe "graphite::common"
@@ -47,38 +51,46 @@ include_recipe "apache2"
 
 # TODO: OMG this needs to be fixed.
 execute "graphite-restore-selinux-context" do
-    command "restorecon -Rv /etc/httpd"
-    action :run
-    only_if do platform?("fedora", "redhat", "centos") end
+  command "restorecon -Rv /etc/httpd"
+  action :run
+  only_if do platform?("fedora", "redhat", "centos") end
 end
 
 include_recipe "apache2::mod_status"
 
 # TODO: OMG this needs to be fixed.
 execute "graphite-restore-selinux-context" do
-    command "restorecon -Rv /etc/httpd"
-    action :run
-    only_if do platform?("fedora", "redhat", "centos") end
+  command "restorecon -Rv /etc/httpd"
+  action :run
+  only_if do platform?("fedora", "redhat", "centos") end
 end
 
-# Workaround to re-enable selinux after installing apache on a fedora machine that has
-# selinux enabled and is currently permissive and the configuration set to enforcing.
+# Workaround to re-enable selinux after installing apache on a fedora machine
+# that has selinux enabled and is currently permissive and the configuration
+# set to enforcing.
 # TODO(breu): get the other one working and this won't be necessary
 #
 execute "graphite-set-selinux-enforcing" do
   command "/sbin/setenforce Enforcing ; restorecon -R /etc/httpd"
   action :run
-  only_if "[ -e /etc/httpd/conf/httpd.conf ] && [ -e /etc/redhat-release ] && [ $(/sbin/sestatus | grep -c '^Current mode:.*permissive') -eq 1 ] && [ $(/sbin/sestatus | grep -c '^Mode from config file:.*enforcing') -eq 1 ]"
-end
+  only_if "[ -e /etc/httpd/conf/httpd.conf ] &&"\
+    " [ -e /etc/redhat-release ] &&"\
+      " [ $(/sbin/sestatus | grep -c '^Current mode:.*permissive') -eq 1 ] &&"\
+        " [ $(/sbin/sestatus | grep -c '^Mode from config file:.*enforcing')"\
+          " -eq 1 ]"
+    end
 
-platform_options = node["graphite"]["platform"]
+      platform_options = node["graphite"]["platform"]
 
-platform_options["graphite_packages"].each do |pkg|
-  package pkg do
-    action :install
-    options platform_options["package_overrides"]
+    platform_options["graphite_packages"].each do |pkg|
+      package pkg do
+        action :install
+        options platform_options["package_overrides"]
+        if pkg == 'graphite-web' and platform?("redhat", "centos", "fedora")
+          options '--disablerepo="*" --enablerepo=rcb --enablerepo=rcb-testing'
+        end
+      end
   end
-end
 
 %W(default default-ssl).each do |name|
   apache_site name do
@@ -93,15 +105,15 @@ end
 # settings someplace not stupid
 
 execute "graphite-restore-selinux-context" do
-    command "restorecon -Rv /etc/httpd"
-    action :run
-    only_if do platform?("fedora", "redhat", "centos") end
+  command "restorecon -Rv /etc/httpd"
+  action :run
+  only_if do platform?("fedora", "redhat", "centos") end
 end
 
 graphite_endpoint = get_bind_endpoint("graphite", "api")
 web_app "graphite" do
   server_name node["hostname"]
-  server_aliases [ node["fqdn"] ]
+  server_aliases [node["fqdn"]]
   graphite_pythonpath platform_options['graphite_pythonpath']
   graphite_log_dir platform_options['graphite_log_dir']
   template "graphite_app.erb"
@@ -110,10 +122,11 @@ web_app "graphite" do
 end
 
 # This angers Shep because apache:listen_ports is getting stomped somewhere
+ports = node["apache"]["listen_ports"].map { |p| p.to_i }.uniq
 template "#{node["apache"]["dir"]}/ports.conf" do
   source "ports.conf.erb"
   cookbook "apache2"
-  variables :apache_listen_ports => node["apache"]["listen_ports"].map{|p| p.to_i}.uniq
-  notifies :restart, resources(:service => "apache2")
+  variables :apache_listen_ports => ports
+  notifies :restart, "service[apache2]"
   mode 0644
 end

@@ -18,4 +18,3 @@
 #
 
 # Common config for graphite modules (apt, mostly)
-
