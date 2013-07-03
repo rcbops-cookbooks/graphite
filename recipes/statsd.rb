@@ -28,10 +28,10 @@ end
 
 service platform_options["statsd_service"] do
   supports :status => true, :restart => true
-  action [ :start, :enable ]
+  action [:start, :enable]
 end
 
-carbon_endpoint = get_bind_endpoint("carbon","line-receiver")
+carbon_endpoint = get_bind_endpoint("carbon", "line-receiver")
 
 template platform_options["statsd_template"] do
   source "statsd-default.erb"
@@ -39,9 +39,9 @@ template platform_options["statsd_template"] do
   group "root"
   mode "0644"
   variables("carbon_host" => carbon_endpoint["host"],
-            "carbon_port" => carbon_endpoint["port"],
-            "flush_interval" => node["statsd"]["flush_interval"]
-            )
-
-  notifies :restart, resources(:service => platform_options["statsd_service"]), :immediately
+    "carbon_port" => carbon_endpoint["port"],
+    "flush_interval" => node["statsd"]["flush_interval"]
+  )
+  srvc = "service[#{platform_options["statsd_service"]}]"
+  notifies :restart, srvc, :immediately
 end

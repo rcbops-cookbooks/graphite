@@ -17,11 +17,11 @@ default["carbon"]["services"]["cache-query"]["port"] = 7002                 # no
 default["carbon"]["services"]["cache-query"]["network"] = "management"      # node_attribute
 
 default["carbon"]["storage_schemas"] = {
-    "everything_1min_1day" => {
-        "priority" => "100",
-        "pattern" => ".*",
-        "retentions" => "60:1440"
-    }
+  "everything_1min_1day" => {
+    "priority" => "100",
+    "pattern" => ".*",
+    "retentions" => "60:1440"
+  }
 }
 
 case platform
@@ -32,7 +32,7 @@ when "redhat", "centos", "fedora"
     "carbon_conf_dir" => "/opt/graphite/conf",                              # node_attribute
     "carbon_log_dir" => "/var/log/carbon/carbon",                           # node_attribute
     "graphite_packages" => ["bitmap", "bitmap-fonts-compat", "pycairo",            # node_attribute
-        "Django14", "django-tagging", "graphite-web", "mod_python"],
+      "Django14", "django-tagging", "graphite-web", "mod_python"],
     "graphite_pythonpath" => "/opt/graphite/webapp",
     "graphite_root" => "/opt/graphite",                                     # node_attribute
     "graphite_log_dir" => "/opt/graphite/storage/log/webapp",               # node_attribute
@@ -47,7 +47,7 @@ when "ubuntu"
     "carbon_apache_user" => "www-data",                                     # node_attribute
     "carbon_conf_dir" => "/etc/carbon",                                     # node_attribute
     "carbon_log_dir" => "/var/log/carbon/carbon",                           # node_attribute
-    "graphite_packages" => ["python-cairo","graphite"],                     # node_attribute
+    "graphite_packages" => ["python-cairo", "graphite"],                     # node_attribute
     "graphite_pythonpath" => "/usr/share/graphite/webapp",                  # node_attribute
     "graphite_root" => "/var/lib/graphite",                                 # node_attribute
     "graphite_log_dir" => "/var/lib/graphite/storage/log/webapp",           # node_attribute
