@@ -51,22 +51,25 @@ template "#{platform_options["carbon_conf_dir"]}/carbon.conf" do
   group "root"
   mode "0644"
   variables("line_receiver_ip" => line_receiver_endpoint["host"],
-            "line_receiver_port" => line_receiver_endpoint["port"],
-            "pickle_receiver_ip" => pickle_receiver_endpoint["host"],
-            "pickle_receiver_port" => pickle_receiver_endpoint["port"],
-            "cache_query_ip" => cache_query_endpoint["host"],
-            "cache_query_port" => cache_query_endpoint["port"],
-            "apache_user" => platform_options["carbon_apache_user"],
-            "carbon_conf_dir" => platform_options["carbon_conf_dir"],
-            "carbon_log_dir" => platform_options["carbon_log_dir"],
-            "graphite_root" => platform_options["graphite_root"]
-            )
+    "line_receiver_port" => line_receiver_endpoint["port"],
+    "pickle_receiver_ip" => pickle_receiver_endpoint["host"],
+    "pickle_receiver_port" => pickle_receiver_endpoint["port"],
+    "cache_query_ip" => cache_query_endpoint["host"],
+    "cache_query_port" => cache_query_endpoint["port"],
+    "apache_user" => platform_options["carbon_apache_user"],
+    "carbon_conf_dir" => platform_options["carbon_conf_dir"],
+    "carbon_log_dir" => platform_options["carbon_log_dir"],
+    "graphite_root" => platform_options["graphite_root"]
+  )
 end
 
 service "carbon-cache" do
   service_name platform_options["carbon_service"]
   supports :status => true, :restart => true
   action [:enable, :restart]
-  subscribes :restart, resources(:template => "#{platform_options["carbon_conf_dir"]}/storage-schemas.conf"), :delayed
-  subscribes :restart, resources(:template => "#{platform_options["carbon_conf_dir"]}/carbon.conf"), :delayed
+  storage_tmplt = "template[#{platform_options["carbon_conf_dir"]}/"\
+    "storage-schemas.conf]"
+  subscribes :restart, storage_tmplt, :delayed
+  carbon_tmplt = "template[#{platform_options["carbon_conf_dir"]}/carbon.conf]"
+  subscribes :restart, carbon_tmplt, :delayed
 end

@@ -1,3 +1,4 @@
+name             "graphite"
 maintainer       "Rackspace US, Inc."
 maintainer_email "osops@lists.launchpad.net"
 license          "Apache 2.0"
