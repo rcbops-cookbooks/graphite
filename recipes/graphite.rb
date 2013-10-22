@@ -69,7 +69,7 @@ execute "graphite-set-selinux-enforcing" do
     platform_options["graphite_packages"].each do |pkg|
       package pkg do
         action :install
-        options platform_options["package_overrides"]
+        options platform_options["package_options"]
         if pkg == 'graphite-web' and platform?("redhat", "centos", "fedora")
           options '--disablerepo="*" --enablerepo=rcb --enablerepo=rcb-testing'
         end
