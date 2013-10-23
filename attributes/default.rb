@@ -39,7 +39,7 @@ when "redhat", "centos", "fedora"
     "whisper_packages" => ["whisper"],                                      # node_attribute
     "statsd_service" => "statsd-c",                                         # node_attribute
     "statsd_template" => "/etc/statsd-c/config",                            # node_attribute
-    "package_overrides" => ""                                               # node_attribute
+    "package_options" => ""                                               # node_attribute
   }
 when "ubuntu"
   default["graphite"]["platform"] = {
@@ -54,6 +54,6 @@ when "ubuntu"
     "whisper_packages" => ["python-whisper"],                               # node_attribute
     "statsd_service" => "statsd",                                           # node_attribute
     "statsd_template" => "/etc/default/statsd",                             # node_attribute
-    "package_overrides" => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'" # node_attribute
+    "package_options" => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'" # node_attribute
   }
 end
