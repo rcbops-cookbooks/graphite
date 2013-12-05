@@ -5,7 +5,7 @@ default["statsd"]["services"]["statsd"]["port"] = 8125                      # no
 default["statsd"]["services"]["statsd"]["network"] = "management"           # node_attribute
 
 default["graphite"]["services"]["api"]["port"] = 80                         # node_attribute
-default["graphite"]["services"]["api"]["network"] = "public"                # node_attribute
+default["graphite"]["services"]["api"]["network"] = "management"                # node_attribute
 
 default["carbon"]["services"]["line-receiver"]["port"] = 2003               # node_attribute
 default["carbon"]["services"]["line-receiver"]["network"] = "management"    # node_attribute

@@ -48,23 +48,7 @@ end
 include_recipe "graphite::common"
 include_recipe "graphite::statsd"
 include_recipe "apache2"
-
-# TODO: OMG this needs to be fixed.
-execute "graphite-restore-selinux-context" do
-  command "restorecon -Rv /etc/httpd"
-  action :run
-  only_if do platform?("fedora", "redhat", "centos") end
-end
-
 include_recipe "apache2::mod_status"
-
-# TODO: OMG this needs to be fixed.
-execute "graphite-restore-selinux-context" do
-  command "restorecon -Rv /etc/httpd"
-  action :run
-  only_if do platform?("fedora", "redhat", "centos") end
-end
-
 # Workaround to re-enable selinux after installing apache on a fedora machine
 # that has selinux enabled and is currently permissive and the configuration
 # set to enforcing.
@@ -99,17 +83,9 @@ execute "graphite-set-selinux-enforcing" do
 end
 
 # FIXME: should install memcache server
-
 # FIXME: should fix up local settings to point to carbon cache instances,
 # (and memcache servers) but this requires package changes to move local
 # settings someplace not stupid
-
-execute "graphite-restore-selinux-context" do
-  command "restorecon -Rv /etc/httpd"
-  action :run
-  only_if do platform?("fedora", "redhat", "centos") end
-end
-
 graphite_endpoint = get_bind_endpoint("graphite", "api")
 web_app "graphite" do
   server_name node["hostname"]
